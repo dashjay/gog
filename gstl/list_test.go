@@ -78,7 +78,7 @@ func TestList(t *testing.T) {
 	e2 := l.PushFront(2)
 	e1 := l.PushFront(1)
 	e3 := l.PushBack(3)
-	e4 := l.PushBack(999)
+	e4 := l.PushBack(0)
 	checkListPointers(t, l, []*Element[int]{e1, e2, e3, e4})
 
 	l.Remove(e2)
@@ -124,7 +124,6 @@ func TestList(t *testing.T) {
 	// Check standard iteration.
 	sum := 0
 	for e := l.Front(); e != nil; e = e.Next() {
-
 		sum += e.Value
 
 	}
