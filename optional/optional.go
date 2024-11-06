@@ -43,3 +43,11 @@ func (o O[T]) ValueOr(dft T) T {
 	}
 	return dft
 }
+
+func (o O[T]) ValueOrZero() T {
+	if o.ok {
+		return o.value
+	}
+	var empty T
+	return empty
+}
