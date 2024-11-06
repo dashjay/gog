@@ -54,5 +54,40 @@ func TestSlices(t *testing.T) {
 			i, _ := strconv.Atoi(x)
 			return i
 		}))
+		assert.Equal(t, float64(0), gslice.AvgBy([]string{"0"}, func(x string) int {
+			i, _ := strconv.Atoi(x)
+			return i
+		}))
+		assert.Equal(t, float64(0), gslice.AvgBy([]string{}, func(x string) int {
+			i, _ := strconv.Atoi(x)
+			return i
+		}))
 	})
+
+	t.Run("test contains", func(t *testing.T) {
+		// contains
+		assert.True(t, gslice.Contains([]int{1, 2, 3}, 1))
+		assert.False(t, gslice.Contains([]int{-1, 2, 3}, 1))
+
+		// contains by
+		assert.True(t, gslice.ContainsBy([]string{"1", "2", "3"}, func(x string) bool {
+			i, _ := strconv.Atoi(x)
+			return i == 1
+		}))
+		assert.False(t, gslice.ContainsBy([]string{"1", "2", "3"}, func(x string) bool {
+			i, _ := strconv.Atoi(x)
+			return i == -1
+		}))
+
+		// contains any
+		assert.True(t, gslice.ContainsAny([]string{"1", "2", "3"}, []string{"1", "99", "1000"}))
+		assert.False(t, gslice.ContainsAny([]string{"1", "2", "3"}, []string{"-1"}))
+		assert.False(t, gslice.ContainsAny([]string{"1", "2", "3"}, []string{}))
+
+		// contains all
+		assert.True(t, gslice.ContainsAll([]string{"1", "2", "3"}, []string{"1", "2", "3"}))
+		assert.False(t, gslice.ContainsAll([]string{"1", "2", "3"}, []string{"1", "99", "1000"}))
+		assert.True(t, gslice.ContainsAll([]string{"1", "2", "3"}, []string{}))
+	})
+
 }

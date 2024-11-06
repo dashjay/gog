@@ -48,3 +48,31 @@ func Avg[T constraints.Number](in []T) float64 {
 func AvgBy[V any, T constraints.Number](in []V, f func(V) T) float64 {
 	return giter.AvgByFromSeq(giter.FromSlice(in), f)
 }
+
+// Contains returns true if the slice contains the value v.
+//
+//	EXAMPLE:
+func Contains[T comparable](in []T, v T) bool {
+	return giter.Contains(giter.FromSlice(in), v)
+}
+
+// ContainsBy returns true if the slice contains the value v evaluated by f.
+//
+//	EXAMPLE:
+func ContainsBy[T any](in []T, f func(T) bool) bool {
+	return giter.ContainsBy(giter.FromSlice(in), f)
+}
+
+// ContainsAny returns true if the slice contains any value in v.
+//
+//	EXAMPLE:
+func ContainsAny[T comparable](in []T, v []T) bool {
+	return giter.ContainsAny(giter.FromSlice(in), v)
+}
+
+// ContainsAll returns true if the slice contains all values in v.
+//
+//	EXAMPLE:
+func ContainsAll[T comparable](in []T, v []T) bool {
+	return giter.ContainsAll(giter.FromSlice(in), v)
+}

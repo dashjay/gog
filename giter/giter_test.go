@@ -43,16 +43,48 @@ func TestSlices(t *testing.T) {
 		assert.False(t, giter.AnyFromSeq(giter.FromSlice(_range(0, 9999)), func(x int) bool { return x < 0 }))
 	})
 
-	t.Run("test avg", func(t *testing.T) {
+	t.Run("test avg & avg by", func(t *testing.T) {
 		assert.Equal(t, avg(_range(1, 101)), giter.AvgFromSeq(giter.FromSlice(_range(1, 101))))
 		assert.Equal(t, float64(0), giter.AvgFromSeq(giter.FromSlice([]int{})))
 		assert.Equal(t, float64(0), giter.AvgFromSeq(giter.FromSlice(_range(-50, 51))))
-	})
 
-	t.Run("test avg by", func(t *testing.T) {
 		assert.Equal(t, float64(2), giter.AvgByFromSeq(giter.FromSlice([]string{"1", "2", "3"}), func(x string) int {
 			i, _ := strconv.Atoi(x)
 			return i
 		}))
+		assert.Equal(t, float64(0), giter.AvgByFromSeq(giter.FromSlice([]string{"0"}), func(x string) int {
+			i, _ := strconv.Atoi(x)
+			return i
+		}))
+		assert.Equal(t, float64(0), giter.AvgByFromSeq(giter.FromSlice([]string{}), func(x string) int {
+			i, _ := strconv.Atoi(x)
+			return i
+		}))
+	})
+
+	t.Run("test contains", func(t *testing.T) {
+		// contains
+		assert.True(t, giter.Contains(giter.FromSlice([]int{1, 2, 3}), 1))
+		assert.False(t, giter.Contains(giter.FromSlice([]int{-1, 2, 3}), 1))
+
+		// contains by
+		assert.True(t, giter.ContainsBy(giter.FromSlice([]string{"1", "2", "3"}), func(x string) bool {
+			i, _ := strconv.Atoi(x)
+			return i == 1
+		}))
+		assert.False(t, giter.ContainsBy(giter.FromSlice([]string{"1", "2", "3"}), func(x string) bool {
+			i, _ := strconv.Atoi(x)
+			return i == -1
+		}))
+
+		// contains any
+		assert.True(t, giter.ContainsAny(giter.FromSlice([]string{"1", "2", "3"}), []string{"1", "99", "1000"}))
+		assert.False(t, giter.ContainsAny(giter.FromSlice([]string{"1", "2", "3"}), []string{"-1"}))
+		assert.False(t, giter.ContainsAny(giter.FromSlice([]string{"1", "2", "3"}), []string{}))
+
+		// contains all
+		assert.True(t, giter.ContainsAll(giter.FromSlice([]string{"1", "2", "3"}), []string{"1", "2", "3"}))
+		assert.False(t, giter.ContainsAll(giter.FromSlice([]string{"1", "2", "3"}), []string{"1", "99", "1000"}))
+		assert.True(t, giter.ContainsAll(giter.FromSlice([]string{"1", "2", "3"}), []string{}))
 	})
 }
