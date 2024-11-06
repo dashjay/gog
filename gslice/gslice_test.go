@@ -178,6 +178,6 @@ func TestSlices(t *testing.T) {
 	t.Run("concat", func(t *testing.T) {
 		assert.Equal(t, []int{1, 2, 3, 4, 5}, gslice.Concat([]int{1, 2, 3}, []int{4, 5}))
 		assert.Equal(t, []int{1, 2, 3}, gslice.Concat([]int{1, 2, 3}))
-		assert.Equal(t, []int{}, gslice.Concat([]int{}, []int{}, []int{}))
+		assert.Len(t, gslice.Concat([]int{}, []int{}, []int{}), 0)
 	})
 }
