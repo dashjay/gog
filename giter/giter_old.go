@@ -6,10 +6,11 @@ package giter
 import (
 	"strings"
 
-	"github.com/dashjay/gog/constraints"
+	"github.com/dashjay/gog/internal/constraints"
 	"github.com/dashjay/gog/optional"
 )
 
+// AllFromSeq return true if all elements from seq satisfy the condition evaluated by f.
 func AllFromSeq[T any](seq Seq[T], f func(T) bool) bool {
 	res := true
 	seq(func(v T) bool {
@@ -22,6 +23,7 @@ func AllFromSeq[T any](seq Seq[T], f func(T) bool) bool {
 	return res
 }
 
+// AnyFromSeq return true if any elements from seq satisfy the condition evaluated by f.
 func AnyFromSeq[T any](seq Seq[T], f func(T) bool) bool {
 	res := false
 	seq(func(v T) bool {
@@ -34,6 +36,7 @@ func AnyFromSeq[T any](seq Seq[T], f func(T) bool) bool {
 	return res
 }
 
+// AvgFromSeq return the average value of all elements from seq.
 func AvgFromSeq[T constraints.Number](seq Seq[T]) float64 {
 	var sum T
 	count := 0
@@ -49,6 +52,7 @@ func AvgFromSeq[T constraints.Number](seq Seq[T]) float64 {
 	return float64(sum) / float64(count)
 }
 
+// AvgByFromSeq return the average value of all elements from seq, evaluated by f.
 func AvgByFromSeq[V any, T constraints.Number](seq Seq[V], f func(V) T) float64 {
 	var sum T
 	count := 0
@@ -64,10 +68,11 @@ func AvgByFromSeq[V any, T constraints.Number](seq Seq[V], f func(V) T) float64 
 	return float64(sum) / float64(count)
 }
 
-func Contains[T comparable](seq Seq[T], in T) bool {
+// Contains return true if v is in seq.
+func Contains[T comparable](seq Seq[T], v T) bool {
 	res := false
 	seq(func(t T) bool {
-		if in == t {
+		if v == t {
 			res = true
 			return false
 		}
@@ -76,6 +81,7 @@ func Contains[T comparable](seq Seq[T], in T) bool {
 	return res
 }
 
+// ContainsBy return true if any element from seq satisfies the condition evaluated by f.
 func ContainsBy[T any](seq Seq[T], f func(T) bool) bool {
 	res := false
 	seq(func(t T) bool {
@@ -88,12 +94,13 @@ func ContainsBy[T any](seq Seq[T], f func(T) bool) bool {
 	return res
 }
 
-func ContainsAny[T comparable](seq Seq[T], in []T) bool {
-	if len(in) == 0 {
+// ContainsAny return true if any element from seq is in vs.
+func ContainsAny[T comparable](seq Seq[T], vs []T) bool {
+	if len(vs) == 0 {
 		return false
 	}
-	m := make(map[T]struct{}, len(in))
-	for _, v := range in {
+	m := make(map[T]struct{}, len(vs))
+	for _, v := range vs {
 		m[v] = struct{}{}
 	}
 	res := false
@@ -107,12 +114,13 @@ func ContainsAny[T comparable](seq Seq[T], in []T) bool {
 	return res
 }
 
-func ContainsAll[T comparable](seq Seq[T], in []T) bool {
-	if len(in) == 0 {
+// ContainsAll return true if all elements from seq is in vs.
+func ContainsAll[T comparable](seq Seq[T], vs []T) bool {
+	if len(vs) == 0 {
 		return true
 	}
-	m := make(map[T]struct{}, len(in))
-	for _, v := range in {
+	m := make(map[T]struct{}, len(vs))
+	for _, v := range vs {
 		m[v] = struct{}{}
 	}
 	seq(func(t T) bool {
@@ -127,6 +135,7 @@ func ContainsAll[T comparable](seq Seq[T], in []T) bool {
 	return len(m) == 0
 }
 
+// Count return the number of elements in seq.
 func Count[T any](seq Seq[T]) int {
 	var count int
 	seq(func(t T) bool {
@@ -136,6 +145,7 @@ func Count[T any](seq Seq[T]) int {
 	return count
 }
 
+// Find return the first element from seq that satisfies the condition evaluated by f with a boolean representing whether it exists.
 func Find[T any](seq Seq[T], f func(T) bool) (val T, found bool) {
 	seq(func(t T) bool {
 		found = f(t)
@@ -148,6 +158,7 @@ func Find[T any](seq Seq[T], f func(T) bool) (val T, found bool) {
 	return
 }
 
+// FindO return the first element from seq that satisfies the condition evaluated by f.
 func FindO[T any](seq Seq[T], f func(T) bool) optional.O[T] {
 	var res = optional.Empty[T]()
 	seq(func(t T) bool {
@@ -160,12 +171,14 @@ func FindO[T any](seq Seq[T], f func(T) bool) optional.O[T] {
 	return res
 }
 
+// ForEach execute f for each element in seq.
 func ForEach[T any](seq Seq[T], f func(T) bool) {
 	seq(func(t T) bool {
 		return f(t)
 	})
 }
 
+// ForEachIdx execute f for each element in seq with its index.
 func ForEachIdx[T any](seq Seq[T], f func(idx int, v T) bool) {
 	i := 0
 	seq(func(t T) bool {
@@ -175,6 +188,7 @@ func ForEachIdx[T any](seq Seq[T], f func(idx int, v T) bool) {
 	})
 }
 
+// HeadO return the first element from seq.
 func HeadO[T any](seq Seq[T]) optional.O[T] {
 	res := optional.Empty[T]()
 	seq(func(t T) bool {
@@ -184,6 +198,7 @@ func HeadO[T any](seq Seq[T]) optional.O[T] {
 	return res
 }
 
+// Head return the first element from seq with a boolean representing whether it is at least one element in seq.
 func Head[T any](seq Seq[T]) (v T, hasOne bool) {
 	seq(func(t T) bool {
 		v = t
@@ -193,6 +208,7 @@ func Head[T any](seq Seq[T]) (v T, hasOne bool) {
 	return
 }
 
+// Join return the concatenation of all elements in seq with sep.
 func Join[T ~string](seq Seq[T], sep T) T {
 	//var out T
 	//first := false
@@ -215,6 +231,7 @@ func Join[T ~string](seq Seq[T], sep T) T {
 	return T(strings.Join(elems, string(sep)))
 }
 
+// Max returns the maximum element in seq.
 func Max[T constraints.Ordered](seq Seq[T]) (r optional.O[T]) {
 	first := true
 	var _max T
@@ -233,6 +250,7 @@ func Max[T constraints.Ordered](seq Seq[T]) (r optional.O[T]) {
 	return optional.FromValue(_max)
 }
 
+// MaxBy return the maximum element in seq, evaluated by f.
 func MaxBy[T constraints.Ordered](seq Seq[T], less func(T, T) bool) (r optional.O[T]) {
 	first := true
 	var _max T
@@ -251,6 +269,7 @@ func MaxBy[T constraints.Ordered](seq Seq[T], less func(T, T) bool) (r optional.
 	return optional.FromValue(_max)
 }
 
+// Min return the minimum element in seq.
 func Min[T constraints.Ordered](seq Seq[T]) (r optional.O[T]) {
 	first := true
 	var _min T
@@ -269,6 +288,7 @@ func Min[T constraints.Ordered](seq Seq[T]) (r optional.O[T]) {
 	return optional.FromValue(_min)
 }
 
+// MinBy return the minimum element in seq, evaluated by f.
 func MinBy[T constraints.Ordered](seq Seq[T], less func(T, T) bool) (r optional.O[T]) {
 	first := true
 	var _min T

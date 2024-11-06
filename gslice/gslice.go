@@ -1,8 +1,8 @@
 package gslice
 
 import (
-	"github.com/dashjay/gog/constraints"
 	"github.com/dashjay/gog/giter"
+	"github.com/dashjay/gog/internal/constraints"
 	"github.com/dashjay/gog/optional"
 )
 

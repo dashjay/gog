@@ -1,4 +1,2 @@
-// Package gstl provides following containers:
-// - list
-// - stack
+// Package gstl provides some containers like list, stack, etc.
 package gstl

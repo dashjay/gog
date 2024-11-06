@@ -1,3 +1,4 @@
+// Package constraints defined constraints for generics tools
 package constraints
 
 type Float interface {

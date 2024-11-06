@@ -1,13 +1,13 @@
-package gstd_test
+package gsync_test
 
 import (
 	"testing"
 
-	"github.com/dashjay/gog/gstd"
+	"github.com/dashjay/gog/gsync"
 )
 
 func TestSyncPool(t *testing.T) {
-	p := gstd.NewSyncPool[[]byte](func() []byte {
+	p := gsync.NewSyncPool[[]byte](func() []byte {
 		return make([]byte, 4096)
 	})
 

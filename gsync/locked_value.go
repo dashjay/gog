@@ -1,4 +1,4 @@
-package gmutex
+package gsync
 
 import "sync"
 

@@ -1,9 +1,11 @@
 package gstl
 
+// Stack is a generic stack.
 type Stack[T any] struct {
 	data []T
 }
 
+// NewStack create a new stack.
 func NewStack[T any]() *Stack[T] {
 	return &Stack[T]{}
 }

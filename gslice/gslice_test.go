@@ -4,8 +4,8 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/dashjay/gog/constraints"
 	"github.com/dashjay/gog/gslice"
+	"github.com/dashjay/gog/internal/constraints"
 	"github.com/dashjay/gog/optional"
 	"github.com/stretchr/testify/assert"
 )
