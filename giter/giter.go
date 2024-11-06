@@ -4,11 +4,20 @@
 package giter
 
 import (
+	"iter"
 	"strings"
 
 	"github.com/dashjay/gog/internal/constraints"
 	"github.com/dashjay/gog/optional"
 )
+
+// Seq is a sequence of elements provided by an iterator-like function.
+// We made an Alias Seq to iter.Seq for providing a compatible interface in lower go versions.
+type Seq[V any] iter.Seq[V]
+
+// Seq2 is a sequence of key/value pair provided by an iterator-like function.
+// We made an Alias Seq2 to iter.Seq2 for providing a compatible interface in lower go versions.
+type Seq2[K, V any] iter.Seq2[K, V]
 
 // AllFromSeq return true if all elements from seq satisfy the condition evaluated by f.
 func AllFromSeq[T any](seq Seq[T], f func(T) bool) bool {

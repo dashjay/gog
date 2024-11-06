@@ -10,6 +10,14 @@ import (
 	"github.com/dashjay/gog/optional"
 )
 
+// Seq is a sequence of elements provided by an iterator-like function.
+// Before Go1.23, golang has not stabled iter package, so we had to define this type
+type Seq[V any] func(yield func(V) bool)
+
+// Seq2 is a sequence of key/value pair provided by an iterator-like function.
+// Before Go1.23, golang has not stabled iter package, so we had to define this type
+type Seq2[K, V any] func(yield func(K, V) bool)
+
 // AllFromSeq return true if all elements from seq satisfy the condition evaluated by f.
 func AllFromSeq[T any](seq Seq[T], f func(T) bool) bool {
 	res := true
