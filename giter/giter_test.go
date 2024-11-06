@@ -6,6 +6,7 @@ import (
 
 	"github.com/dashjay/gog/constraints"
 	"github.com/dashjay/gog/giter"
+	"github.com/dashjay/gog/optional"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -86,5 +87,68 @@ func TestSlices(t *testing.T) {
 		assert.True(t, giter.ContainsAll(giter.FromSlice([]string{"1", "2", "3"}), []string{"1", "2", "3"}))
 		assert.False(t, giter.ContainsAll(giter.FromSlice([]string{"1", "2", "3"}), []string{"1", "99", "1000"}))
 		assert.True(t, giter.ContainsAll(giter.FromSlice([]string{"1", "2", "3"}), []string{}))
+	})
+
+	t.Run("test count", func(t *testing.T) {
+		assert.Equal(t, len(_range(0, 10)), giter.Count(giter.FromSlice(_range(0, 10))))
+	})
+
+	t.Run("test find", func(t *testing.T) {
+		assert.Equal(t, 1,
+			optional.FromValue2(giter.Find(giter.FromSlice(_range(0, 10)), func(x int) bool { return x == 1 })).Must())
+		assert.False(t, optional.FromValue2(giter.Find(giter.FromSlice(_range(0, 10)), func(x int) bool { return x == -1 })).Ok())
+
+		assert.Equal(t, 1,
+			giter.FindO(giter.FromSlice(_range(0, 10)), func(x int) bool { return x == 1 }).Must())
+		assert.False(t,
+			giter.FindO(giter.FromSlice(_range(0, 10)), func(x int) bool { return x == -1 }).Ok())
+	})
+
+	t.Run("test foreach", func(t *testing.T) {
+		var res []int
+		giter.ForEach(giter.FromSlice(_range(0, 10)), func(i int) bool {
+			if i == 5 {
+				return false
+			}
+			res = append(res, i)
+			return true
+		})
+		assert.Equal(t, _range(0, 5), res)
+
+		var idxs []int
+		var res2 []int
+
+		giter.ForEachIdx(giter.FromSlice(_range(0, 10)), func(idx int, v int) bool {
+			if idx == 5 {
+				return false
+			}
+			idxs = append(idxs, idx)
+			res2 = append(res2, v)
+			return true
+		})
+		assert.Equal(t, _range(0, 5), idxs)
+		assert.Equal(t, _range(0, 5), res2)
+	})
+
+	t.Run("test head", func(t *testing.T) {
+		assert.Equal(t, 0,
+			optional.FromValue2(giter.Head(giter.FromSlice(_range(0, 10)))).Must())
+		assert.False(t,
+			optional.FromValue2(giter.Head(giter.FromSlice(_range(0, 0)))).Ok())
+
+		assert.Equal(t, 0,
+			giter.HeadO(giter.FromSlice(_range(0, 10))).Must())
+		assert.False(t,
+			giter.HeadO(giter.FromSlice(_range(0, 0))).Ok())
+	})
+
+	t.Run("test join", func(t *testing.T) {
+		assert.Equal(t, "1.2.3", giter.Join(giter.FromSlice([]string{"1", "2", "3"}), "."))
+		assert.Equal(t, "", giter.Join(giter.FromSlice([]string{}), "."))
+	})
+
+	t.Run("min max", func(t *testing.T) {
+		assert.Equal(t, 1, giter.Min(giter.FromSlice([]int{3, 2, 1})))
+		assert.Equal(t, 3, giter.Max(giter.FromSlice([]int{1, 2, 3})))
 	})
 }

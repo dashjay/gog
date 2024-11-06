@@ -6,6 +6,7 @@ import (
 
 	"github.com/dashjay/gog/constraints"
 	"github.com/dashjay/gog/gslice"
+	"github.com/dashjay/gog/optional"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -47,6 +48,10 @@ func TestSlices(t *testing.T) {
 		assert.Equal(t, avg(_range(1, 101)), gslice.Avg(_range(1, 101)))
 		assert.Equal(t, float64(0), gslice.Avg([]int{}))
 		assert.Equal(t, float64(0), gslice.Avg(_range(-50, 51)))
+
+		assert.Equal(t, avg(_range(1, 101)), gslice.AvgN(_range(1, 101)...))
+		assert.Equal(t, float64(0), gslice.AvgN([]int{}...))
+		assert.Equal(t, float64(0), gslice.AvgN(_range(-50, 51)...))
 	})
 
 	t.Run("test avg by", func(t *testing.T) {
@@ -88,6 +93,73 @@ func TestSlices(t *testing.T) {
 		assert.True(t, gslice.ContainsAll([]string{"1", "2", "3"}, []string{"1", "2", "3"}))
 		assert.False(t, gslice.ContainsAll([]string{"1", "2", "3"}, []string{"1", "99", "1000"}))
 		assert.True(t, gslice.ContainsAll([]string{"1", "2", "3"}, []string{}))
+	})
+
+	t.Run("test count", func(t *testing.T) {
+		assert.Equal(t, 3, gslice.Count([]int{1, 2, 3}))
+		assert.Equal(t, 0, gslice.Count([]int{}))
+		assert.Equal(t, 10000, gslice.Count(_range(0, 10000)))
+	})
+
+	t.Run("test find", func(t *testing.T) {
+		assert.Equal(t, 1,
+			optional.FromValue2(gslice.Find(_range(0, 10), func(x int) bool { return x == 1 })).Must())
+		assert.False(t, optional.FromValue2(gslice.Find(_range(0, 10), func(x int) bool { return x == -1 })).Ok())
+
+		assert.Equal(t, 1,
+			gslice.FindO(_range(0, 10), func(x int) bool { return x == 1 }).Must())
+		assert.False(t,
+			gslice.FindO(_range(0, 10), func(x int) bool { return x == -1 }).Ok())
+	})
+
+	t.Run("test foreach", func(t *testing.T) {
+		var res []int
+		gslice.ForEach(_range(0, 10), func(i int) bool {
+			if i == 5 {
+				return false
+			}
+			res = append(res, i)
+			return true
+		})
+		assert.Equal(t, _range(0, 5), res)
+
+		var idxs []int
+		var res2 []int
+
+		gslice.ForEachIdx(_range(0, 10), func(idx int, v int) bool {
+			if idx == 5 {
+				return false
+			}
+			idxs = append(idxs, idx)
+			res2 = append(res2, v)
+			return true
+		})
+		assert.Equal(t, _range(0, 5), idxs)
+		assert.Equal(t, _range(0, 5), res2)
+	})
+
+	t.Run("test head", func(t *testing.T) {
+		assert.Equal(t, 0,
+			optional.FromValue2(gslice.Head(_range(0, 10))).Must())
+		assert.False(t,
+			optional.FromValue2(gslice.Head(_range(0, 0))).Ok())
+
+		assert.Equal(t, 0,
+			gslice.HeadO(_range(0, 10)).Must())
+		assert.False(t,
+			gslice.HeadO(_range(0, 0)).Ok())
+	})
+
+	t.Run("test join", func(t *testing.T) {
+		assert.Equal(t, "1.2.3", gslice.Join([]string{"1", "2", "3"}, "."))
+		assert.Equal(t, "", gslice.Join([]string{}, "."))
+	})
+
+	t.Run("min max", func(t *testing.T) {
+		assert.Equal(t, 1, gslice.Min([]int{1, 2, 3}))
+		assert.Equal(t, 1, gslice.MinN([]int{1, 2, 3}...))
+		assert.Equal(t, 3, gslice.Max([]int{1, 2, 3}))
+		assert.Equal(t, 3, gslice.MaxN([]int{1, 2, 3}...))
 	})
 
 }

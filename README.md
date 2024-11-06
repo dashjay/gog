@@ -13,6 +13,13 @@ generics library for golang
 
 ## Changelog
 
+v0.1.3:
+- Implement slice tools ()
+  - [x] gslice.All
+  - [x] gslice.Any
+  - [x] gslice.Avg
+  - [x] gslice.Contains...
+  - ...
 v0.1.2:
 - Implement stl containers
   - [x] stack
