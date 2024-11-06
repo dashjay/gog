@@ -177,7 +177,7 @@ func Join[T ~string](seq Seq[T], sep T) T {
 	return T(strings.Join(elems, string(sep)))
 }
 
-func Max[T constraints.Ordered](seq Seq[T]) T {
+func Max[T constraints.Ordered](seq Seq[T]) (r optional.O[T]) {
 	first := true
 	var _max T
 	for v := range seq {
@@ -188,10 +188,13 @@ func Max[T constraints.Ordered](seq Seq[T]) T {
 			_max = v
 		}
 	}
-	return _max
+	if first {
+		return
+	}
+	return optional.FromValue(_max)
 }
 
-func Min[T constraints.Ordered](seq Seq[T]) T {
+func Min[T constraints.Ordered](seq Seq[T]) (r optional.O[T]) {
 	first := true
 	var _min T
 	for v := range seq {
@@ -202,5 +205,8 @@ func Min[T constraints.Ordered](seq Seq[T]) T {
 			_min = v
 		}
 	}
-	return _min
+	if first {
+		return
+	}
+	return optional.FromValue(_min)
 }

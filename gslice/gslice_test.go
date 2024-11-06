@@ -156,10 +156,13 @@ func TestSlices(t *testing.T) {
 	})
 
 	t.Run("min max", func(t *testing.T) {
-		assert.Equal(t, 1, gslice.Min([]int{1, 2, 3}))
-		assert.Equal(t, 1, gslice.MinN([]int{1, 2, 3}...))
-		assert.Equal(t, 3, gslice.Max([]int{1, 2, 3}))
-		assert.Equal(t, 3, gslice.MaxN([]int{1, 2, 3}...))
+		assert.Equal(t, 1, gslice.Min([]int{1, 2, 3}).Must())
+		assert.Equal(t, 1, gslice.MinN([]int{1, 2, 3}...).Must())
+		assert.Equal(t, 3, gslice.Max([]int{1, 2, 3}).Must())
+		assert.Equal(t, 3, gslice.MaxN([]int{1, 2, 3}...).Must())
+
+		assert.False(t, gslice.Min([]int{}).Ok())
+		assert.False(t, gslice.Max([]int{}).Ok())
 	})
 
 }

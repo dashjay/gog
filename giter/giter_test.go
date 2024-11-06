@@ -148,7 +148,10 @@ func TestSlices(t *testing.T) {
 	})
 
 	t.Run("min max", func(t *testing.T) {
-		assert.Equal(t, 1, giter.Min(giter.FromSlice([]int{3, 2, 1})))
-		assert.Equal(t, 3, giter.Max(giter.FromSlice([]int{1, 2, 3})))
+		assert.Equal(t, 1, giter.Min(giter.FromSlice([]int{3, 2, 1})).Must())
+		assert.Equal(t, 3, giter.Max(giter.FromSlice([]int{1, 2, 3})).Must())
+
+		assert.False(t, giter.Min(giter.FromSlice([]int{})).Ok())
+		assert.False(t, giter.Max(giter.FromSlice([]int{})).Ok())
 	})
 }

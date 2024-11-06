@@ -9,7 +9,7 @@ import (
 
 func TestOptional(t *testing.T) {
 	t.Parallel()
-	
+
 	o := optional.FromValue(1)
 	assert.True(t, o.Ok())
 	assert.Equal(t, 1, o.Must())

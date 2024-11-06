@@ -204,7 +204,7 @@ func Join[T ~string](in []T, sep T) T {
 //	EXAMPLE:
 //	assert.Equal(t, 1, gslice.Min([]int{1, 2, 3}))
 //	assert.Equal(t, 0, gslice.Min([]int{}))
-func Min[T constraints.Ordered](in []T) T {
+func Min[T constraints.Ordered](in []T) optional.O[T] {
 	return giter.Min(giter.FromSlice(in))
 }
 
@@ -212,7 +212,7 @@ func Min[T constraints.Ordered](in []T) T {
 //
 //	EXAMPLE:
 //	assert.Equal(t, 1, gslice.MinN(1, 2, 3))
-func MinN[T constraints.Ordered](in ...T) T {
+func MinN[T constraints.Ordered](in ...T) optional.O[T] {
 	return Min(in)
 }
 
@@ -221,7 +221,7 @@ func MinN[T constraints.Ordered](in ...T) T {
 //	EXAMPLE:
 //	assert.Equal(t, 3, gslice.Max([]int{1, 2, 3}))
 //	assert.Equal(t, 0, gslice.Max([]int{}))
-func Max[T constraints.Ordered](in []T) T {
+func Max[T constraints.Ordered](in []T) optional.O[T] {
 	return giter.Max(giter.FromSlice(in))
 }
 
@@ -229,6 +229,6 @@ func Max[T constraints.Ordered](in []T) T {
 //
 //	EXAMPLE:
 //	assert.Equal(t, 3, gslice.MaxN(1, 2, 3))
-func MaxN[T constraints.Ordered](in ...T) T {
+func MaxN[T constraints.Ordered](in ...T) optional.O[T] {
 	return Max(in)
 }
