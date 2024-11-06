@@ -163,6 +163,11 @@ func TestSlices(t *testing.T) {
 
 		assert.False(t, gslice.Min([]int{}).Ok())
 		assert.False(t, gslice.Max([]int{}).Ok())
+
+		assert.Equal(t, 3,
+			gslice.MinBy([]int{3, 2, 1} /*less = */, func(a, b int) bool { return a > b }).Must())
+		assert.Equal(t, 1,
+			gslice.MaxBy([]int{1, 2, 3} /*less = */, func(a, b int) bool { return a > b }).Must())
 	})
 
 }

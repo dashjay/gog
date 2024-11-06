@@ -194,6 +194,23 @@ func Max[T constraints.Ordered](seq Seq[T]) (r optional.O[T]) {
 	return optional.FromValue(_max)
 }
 
+func MaxBy[T constraints.Ordered](seq Seq[T], less func(T, T) bool) (r optional.O[T]) {
+	first := true
+	var _max T
+	for v := range seq {
+		if first {
+			_max = v
+			first = false
+		} else if less(_max, v) {
+			_max = v
+		}
+	}
+	if first {
+		return
+	}
+	return optional.FromValue(_max)
+}
+
 func Min[T constraints.Ordered](seq Seq[T]) (r optional.O[T]) {
 	first := true
 	var _min T
@@ -202,6 +219,23 @@ func Min[T constraints.Ordered](seq Seq[T]) (r optional.O[T]) {
 			_min = v
 			first = false
 		} else if _min > v {
+			_min = v
+		}
+	}
+	if first {
+		return
+	}
+	return optional.FromValue(_min)
+}
+
+func MinBy[T constraints.Ordered](seq Seq[T], less func(T, T) bool) (r optional.O[T]) {
+	first := true
+	var _min T
+	for v := range seq {
+		if first {
+			_min = v
+			first = false
+		} else if less(v, _min) {
 			_min = v
 		}
 	}

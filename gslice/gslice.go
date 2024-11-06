@@ -216,6 +216,14 @@ func MinN[T constraints.Ordered](in ...T) optional.O[T] {
 	return Min(in)
 }
 
+// MinBy returns the minimum value evaluated by f in the slice.
+//
+//	EXAMPLE:
+//	assert.Equal(t, 3, gslice.MinBy([]int{3, 2, 1} /*less = */, func(a, b int) bool { return a > b }).Must())
+func MinBy[T constraints.Ordered](in []T, f func(T, T) bool) optional.O[T] {
+	return giter.MinBy(giter.FromSlice(in), f)
+}
+
 // Max returns the maximum value in the slice.
 //
 //	EXAMPLE:
@@ -231,4 +239,12 @@ func Max[T constraints.Ordered](in []T) optional.O[T] {
 //	assert.Equal(t, 3, gslice.MaxN(1, 2, 3))
 func MaxN[T constraints.Ordered](in ...T) optional.O[T] {
 	return Max(in)
+}
+
+// MaxBy returns the maximum value evaluated by f in the slice.
+//
+//	EXAMPLE:
+//	assert.Equal(t, 1, gslice.MaxBy([]int{1, 2, 3} /*less = */, func(a, b int) bool { return a > b }).Must())
+func MaxBy[T constraints.Ordered](in []T, f func(T, T) bool) optional.O[T] {
+	return giter.MaxBy(giter.FromSlice(in), f)
 }

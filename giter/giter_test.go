@@ -153,5 +153,13 @@ func TestSlices(t *testing.T) {
 
 		assert.False(t, giter.Min(giter.FromSlice([]int{})).Ok())
 		assert.False(t, giter.Max(giter.FromSlice([]int{})).Ok())
+
+		assert.Equal(t, 3,
+			giter.MinBy(giter.FromSlice([]int{1, 3, 2}) /*less = */, func(a, b int) bool { return a > b }).Must())
+		assert.Equal(t, 1,
+			giter.MaxBy(giter.FromSlice([]int{3, 1, 2}) /*less = */, func(a, b int) bool { return a > b }).Must())
+
+		assert.False(t, giter.MinBy(giter.FromSlice([]int{}) /*less = */, func(a, b int) bool { return a > b }).Ok())
+		assert.False(t, giter.MaxBy(giter.FromSlice([]int{}) /*less = */, func(a, b int) bool { return a > b }).Ok())
 	})
 }
