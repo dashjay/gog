@@ -256,3 +256,56 @@ func MaxN[T constraints.Ordered](in ...T) optional.O[T] {
 func MaxBy[T constraints.Ordered](in []T, f func(T, T) bool) optional.O[T] {
 	return giter.MaxBy(giter.FromSlice(in), f)
 }
+
+// Map returns a new slice with the results of applying the given function to every element in this slice.
+//
+// EXAMPLE:
+//
+//	gslice.Map([]int{1, 2, 3}, func(x int) int { return x * 2 }) 👉 [2, 4, 6]
+//	gslice.Map([]int{1, 2, 3}, strconv.Itoa) 👉 ["1", "2", "3"]
+func Map[T any, U any](in []T, f func(T) U) []U {
+	out := make([]U, len(in))
+	for i := range in {
+		out[i] = f(in[i])
+	}
+	return out
+}
+
+// Clone returns a copy of the slice.
+//
+// EXAMPLE:
+//
+//	gslice.Clone([]int{1, 2, 3}) 👉 [1, 2, 3]
+func Clone[T any](in []T) []T {
+	if in == nil {
+		return nil
+	}
+	return giter.ToSlice(giter.FromSlice(in))
+}
+
+// CloneBy returns a copy of the slice with the results of applying the given function to every element in this slice.
+//
+// EXAMPLE:
+//
+//	gslice.CloneBy([]int{1, 2, 3}, func(x int) int { return x * 2 }) 👉 [2, 4, 6]
+//	gslice.CloneBy([]int{1, 2, 3}, strconv.Itoa) 👉 ["1", "2", "3"]
+func CloneBy[T any, U any](in []T, f func(T) U) []U {
+	if in == nil {
+		return nil
+	}
+	return Map(in, f)
+}
+
+// Concat concatenates the slices.
+//
+// EXAMPLE:
+//
+//	gslice.Concat([]int{1, 2, 3}, []int{4, 5, 6}) 👉 [1, 2, 3, 4, 5, 6]
+//	gslice.Concat([]int{1, 2, 3}, []int{}) 👉 [1, 2, 3]
+func Concat[T any](vs ...[]T) []T {
+	var seqs = make([]giter.Seq[T], 0, len(vs))
+	for _, v := range vs {
+		seqs = append(seqs, giter.FromSlice(v))
+	}
+	return giter.ToSlice(giter.Concat(seqs...))
+}

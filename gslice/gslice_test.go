@@ -170,4 +170,14 @@ func TestSlices(t *testing.T) {
 			gslice.MaxBy([]int{1, 2, 3} /*less = */, func(a, b int) bool { return a > b }).Must())
 	})
 
+	t.Run("clone", func(t *testing.T) {
+		assert.Equal(t, []int{1, 2, 3}, gslice.Clone([]int{1, 2, 3}))
+		assert.Equal(t, []string{"1", "2", "3"}, gslice.CloneBy([]int{1, 2, 3}, strconv.Itoa))
+	})
+
+	t.Run("concat", func(t *testing.T) {
+		assert.Equal(t, []int{1, 2, 3, 4, 5}, gslice.Concat([]int{1, 2, 3}, []int{4, 5}))
+		assert.Equal(t, []int{1, 2, 3}, gslice.Concat([]int{1, 2, 3}))
+		assert.Equal(t, []int{}, gslice.Concat([]int{}, []int{}, []int{}))
+	})
 }

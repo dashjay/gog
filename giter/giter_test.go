@@ -162,4 +162,12 @@ func TestSlices(t *testing.T) {
 		assert.False(t, giter.MinBy(giter.FromSlice([]int{}) /*less = */, func(a, b int) bool { return a > b }).Ok())
 		assert.False(t, giter.MaxBy(giter.FromSlice([]int{}) /*less = */, func(a, b int) bool { return a > b }).Ok())
 	})
+
+	t.Run("to slice", func(t *testing.T) {
+		assert.Equal(t, _range(0, 10), giter.ToSlice(giter.FromSlice(_range(0, 10))))
+	})
+
+	t.Run("concat", func(t *testing.T) {
+		assert.Equal(t, _range(0, 10), giter.ToSlice(giter.Concat(giter.FromSlice(_range(0, 5)), giter.FromSlice(_range(5, 10)))))
+	})
 }

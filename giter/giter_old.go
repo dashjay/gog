@@ -314,3 +314,12 @@ func MinBy[T constraints.Ordered](seq Seq[T], less func(T, T) bool) (r optional.
 	}
 	return optional.FromValue(_min)
 }
+
+// ToSlice return a slice containing all elements from seq.
+func ToSlice[T any](seq Seq[T]) (out []T) {
+	seq(func(t T) bool {
+		out = append(out, t)
+		return true
+	})
+	return
+}
