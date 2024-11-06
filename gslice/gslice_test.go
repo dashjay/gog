@@ -172,7 +172,9 @@ func TestSlices(t *testing.T) {
 
 	t.Run("clone", func(t *testing.T) {
 		assert.Equal(t, []int{1, 2, 3}, gslice.Clone([]int{1, 2, 3}))
+		assert.Len(t, gslice.Clone([]int{}), 0)
 		assert.Equal(t, []string{"1", "2", "3"}, gslice.CloneBy([]int{1, 2, 3}, strconv.Itoa))
+		assert.Len(t, gslice.CloneBy([]int{}, strconv.Itoa), 0)
 	})
 
 	t.Run("concat", func(t *testing.T) {
