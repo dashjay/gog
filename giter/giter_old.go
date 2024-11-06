@@ -324,6 +324,19 @@ func ToSlice[T any](seq Seq[T]) (out []T) {
 	return
 }
 
+// Filter return a new seq filtered origin seq with f
+func Filter[T any](seq Seq[T], f func(T) bool) Seq[T] {
+	return func(yield func(T) bool) {
+		seq(func(v T) bool {
+			if f(v) {
+				if !yield(v) {
+					break
+				}
+			}
+		})
+	}
+}
+
 // Concat receive some seqs and return a seq concat them
 func Concat[T any](seqs ...Seq[T]) Seq[T] {
 	return func(yield func(T) bool) {

@@ -167,7 +167,12 @@ func TestSlices(t *testing.T) {
 		assert.Equal(t, _range(0, 10), giter.ToSlice(giter.FromSlice(_range(0, 10))))
 	})
 
-	t.Run("concat", func(t *testing.T) {
+	t.Run("concat and filter", func(t *testing.T) {
 		assert.Equal(t, _range(0, 10), giter.ToSlice(giter.Concat(giter.FromSlice(_range(0, 5)), giter.FromSlice(_range(5, 10)))))
+		assert.Equal(t, []int{0, 1, 2, 3, 4 /* 5 is filtered */, 6, 7, 8, 9},
+			giter.ToSlice(giter.Concat(
+				giter.FromSlice(_range(0, 5)),
+				giter.Filter(giter.FromSlice(_range(5, 10)), func(v int) bool { return v != 5 }),
+			)))
 	})
 }
