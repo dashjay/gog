@@ -282,10 +282,11 @@ func ToSlice[T any](seq Seq[T]) (out []T) {
 	return out
 }
 
-func Concat[T any](seq ...Seq[T]) Seq[T] {
+// Concat receive some seqs and return a seq concat them
+func Concat[T any](seqs ...Seq[T]) Seq[T] {
 	return func(yield func(T) bool) {
-		for i := range seq {
-			for v := range seq[i] {
+		for i := range seqs {
+			for v := range seqs[i] {
 				if !yield(v) {
 					break
 				}
