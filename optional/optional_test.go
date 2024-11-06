@@ -25,4 +25,9 @@ func TestOptional(t *testing.T) {
 	assert.Equal(t, 2, o.ValueOr(2))
 	assert.Equal(t, 0, o.ValueOrZero())
 	assert.Nil(t, o.Ptr())
+
+	var m = make(map[int]int)
+	x, exists := m[1]
+	o = optional.FromValue2(x, exists)
+	assert.False(t, o.Ok())
 }
