@@ -211,9 +211,11 @@ func TestIter(t *testing.T) {
 		// skip
 		assert.Equal(t, _range(10, 30), giter.ToSlice(giter.Skip(giter.FromSlice(_range(0, 30)), 10)))
 		assert.Equal(t, _range(0, 30), giter.ToSlice(giter.Skip(giter.FromSlice(_range(0, 30)), 0)))
+		assert.Equal(t, _range(10, 20), giter.ToSlice(giter.Limit(giter.Skip(giter.FromSlice(_range(0, 30)), 10), 10)))
 
 		// limit
 		assert.Equal(t, _range(0, 10), giter.ToSlice(giter.Limit(giter.FromSlice(_range(0, 30)), 10)))
+		assert.Equal(t, _range(0, 10)[0:1], giter.ToSlice(giter.Limit(giter.Limit(giter.FromSlice(_range(0, 30)), 10), 1)))
 		assert.Equal(t, _range(0, 10), giter.ToSlice(giter.Limit(giter.FromSlice(_range(0, 10)), 10)))
 		assert.Equal(t, _range(0, 0), giter.ToSlice(giter.Limit(giter.FromSlice(_range(0, 0)), 10)))
 		assert.Equal(t, _range(0, 0), giter.ToSlice(giter.Limit(giter.FromSlice(_range(0, 10)), 0)))
@@ -223,6 +225,9 @@ func TestIter(t *testing.T) {
 		assert.Equal(t, append([]int{10}, _range(1, 10)...), giter.ToSlice(giter.ReplaceAll(giter.FromSlice(_range(0, 10)), 0, 10)))
 		assert.Equal(t, append([]int{10}, _range(1, 10)...), giter.ToSlice(giter.Replace(giter.FromSlice(_range(0, 10)), 0, 10, 1)))
 		assert.Equal(t, append([]int{10}, _range(1, 10)...), giter.ToSlice(giter.Replace(giter.FromSlice(_range(0, 10)), 0, 10, 5)))
+		for i := 1; i < 10; i++ {
+			assert.Equal(t, append([]int{10}, _range(1, 10)...)[:i], giter.ToSlice(giter.Limit(giter.Replace(giter.FromSlice(_range(0, 10)), 0, 10, 5), i)))
+		}
 
 		// replace nothing
 		assert.Equal(t, _range(0, 10), giter.ToSlice(giter.Replace(giter.FromSlice(_range(0, 10)), 0, 100, 0)))

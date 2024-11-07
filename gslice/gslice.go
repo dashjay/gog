@@ -331,19 +331,19 @@ func Subset[T any, Slice ~[]T](in Slice, start, count int) Slice {
 	}
 }
 
-// SubsetInplace returns a subset slice copied from the slice.
+// SubsetInPlace returns a subset slice copied from the slice.
 // if start < -1 means that we take subset from right-to-left
 // EXAMPLE:
 //
-//	gslice.SubsetInplace([]int{1, 2, 3}, 0, 2) 👉 [1, 2]
-//	gslice.SubsetInplace([]int{1, 2, 3}, -1, 2) 👉 [2, 3]
-func SubsetInplace[T any, Slice ~[]T](in Slice, start int, count uint) Slice {
+//	gslice.SubsetInPlace([]int{1, 2, 3}, 0, 2) 👉 [1, 2]
+//	gslice.SubsetInPlace([]int{1, 2, 3}, -1, 2) 👉 [2, 3]
+func SubsetInPlace[T any, Slice ~[]T](in Slice, start int, count uint) Slice {
 	size := len(in)
 
 	if start < 0 {
 		start = size + start
 		if start < 0 {
-			start = 0
+			return Slice{}
 		}
 	}
 	if start > size {

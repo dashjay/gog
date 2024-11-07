@@ -200,9 +200,11 @@ func TestSlices(t *testing.T) {
 			assert.Subset(t, _range(0, 200), gslice.Subset(_range(0, 200), i, 10))
 		}
 
-		assert.Equal(t, []int{3}, gslice.SubsetInplace([]int{1, 2, 3}, -1, 1))
-		assert.Equal(t, []int{3}, gslice.SubsetInplace([]int{1, 2, 3}, -1, 2))
-		assert.Equal(t, []int{3}, gslice.SubsetInplace([]int{1, 2, 3}, -1, 3))
+		assert.Equal(t, []int{3}, gslice.SubsetInPlace([]int{1, 2, 3}, -1, 1))
+		assert.Equal(t, []int{3}, gslice.SubsetInPlace([]int{1, 2, 3}, -1, 2))
+		assert.Equal(t, []int{3}, gslice.SubsetInPlace([]int{1, 2, 3}, -1, 3))
+		assert.Len(t, gslice.SubsetInPlace([]int{1, 2, 3}, -999, 3), 0)
+		assert.Len(t, gslice.SubsetInPlace([]int{1, 2, 3}, 999, 3), 0)
 
 		for i := 1; i < 100; i++ {
 			assert.Equal(t, _range(200-i, gslice.MinN(200-i+10, 200).Must()), gslice.Subset(_range(0, 200), -i, 10))
