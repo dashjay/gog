@@ -400,3 +400,13 @@ func Reverse[T any, Slice ~[]T](in Slice) {
 		in[i], in[j] = in[j], in[i]
 	}
 }
+
+// Repeat returns a new slice with the elements repeated 'count' times.
+//
+// EXAMPLE:
+//
+//	gslice.Repeat([]int{1, 2, 3}, 3) 👉 [1, 2, 3, 1, 2, 3, 1, 2, 3]
+//	gslice.Repeat([]int{1, 2, 3}, 0) 👉 []int{}
+func Repeat[T any, Slice ~[]T](in Slice, count int) Slice {
+	return giter.ToSlice(giter.Repeat(giter.FromSlice(in), count))
+}

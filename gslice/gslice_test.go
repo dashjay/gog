@@ -226,12 +226,17 @@ func TestSlices(t *testing.T) {
 		assert.Equal(t, _range(0, 10), giter.ToSlice(giter.Replace(giter.FromSlice(_range(0, 10)), 0, 100, 0)))
 	})
 
-	t.Run("reverse", func(t *testing.T) {
+	t.Run("test reverse", func(t *testing.T) {
 		assert.Equal(t, []int{3, 2, 1}, gslice.ReverseClone([]int{1, 2, 3}))
 		assert.Equal(t, []int{5, 4, 3, 2, 1}, gslice.ReverseClone([]int{1, 2, 3, 4, 5}))
 
 		arr := []int{1, 2, 3}
 		gslice.Reverse(arr)
 		assert.Equal(t, []int{3, 2, 1}, arr)
+	})
+
+	t.Run("test repeat", func(t *testing.T) {
+		assert.Equal(t, []int{1, 1, 1}, gslice.Repeat([]int{1}, 3))
+		assert.Equal(t, []int{1, 2, 3, 1, 2, 3, 1, 2, 3}, gslice.Repeat([]int{1, 2, 3}, 3))
 	})
 }

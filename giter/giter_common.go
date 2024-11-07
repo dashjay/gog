@@ -47,3 +47,12 @@ func Reverse[T any](seq Seq[T]) Seq[T] {
 		}
 	}
 }
+
+// Repeat return a seq that repeat seq for count times.
+func Repeat[T any](seq Seq[T], count int) Seq[T] {
+	seqs := make([]Seq[T], 0, count)
+	for i := 0; i < count; i++ {
+		seqs = append(seqs, seq)
+	}
+	return Concat(seqs...)
+}
