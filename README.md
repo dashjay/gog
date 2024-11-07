@@ -42,8 +42,18 @@ generics library for golang
 - [gslice.Clone](https://pkg.go.dev/github.com/dashjay/gog/gslice#Clone)
 - [gslice.CloneBy](https://pkg.go.dev/github.com/dashjay/gog/gslice#CloneBy)
 - [gslice.Concat](https://pkg.go.dev/github.com/dashjay/gog/gslice#Concat)
+- [gslice.Subset](https://pkg.go.dev/github.com/dashjay/gog/gslice#Subset)
+- [gslice.SubsetInplace](https://pkg.go.dev/github.com/dashjay/gog/gslice#SubsetInplace)
+- [gslice.Replace](https://pkg.go.dev/github.com/dashjay/gog/gslice#Replace)
+- [gslice.ReplaceAll](https://pkg.go.dev/github.com/dashjay/gog/gslice#ReplaceAll)
+- [gslice.ReverseClone](https://pkg.go.dev/github.com/dashjay/gog/gslice#ReverseClone)
+- [gslice.Reverse](https://pkg.go.dev/github.com/dashjay/gog/gslice#Reverse)
+
 
 ## Changelog
+
+v0.1.4:
+- Implement more slice tools like subset, replace, reverse, etc.
 
 v0.1.3:
 - Implement slice tools ()
