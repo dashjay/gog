@@ -356,8 +356,9 @@ func PullOut[T any](seq Seq[T], n int) (out []T) {
 		if n == 0 {
 			return false
 		}
-		out = append(out, v)
+		out = append(out, t)
 		n--
+		return true
 	})
 	return out
 }
