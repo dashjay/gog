@@ -50,6 +50,8 @@ generics library for golang
 - [gslice.Reverse](https://pkg.go.dev/github.com/dashjay/gog/gslice#Reverse)
 - [gslice.Repeat](https://pkg.go.dev/github.com/dashjay/gog/gslice#Repeat)
 - [gslice.RepeatBy](https://pkg.go.dev/github.com/dashjay/gog/gslice#RepeatBy)
+- [gslice.Shuffle](https://pkg.go.dev/github.com/dashjay/gog/gslice#Shuffle)
+- [gslice.ShuffleInPlace](https://pkg.go.dev/github.com/dashjay/gog/gslice#ShuffleInPlace)
 
 ## Changelog
 
