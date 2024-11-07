@@ -225,8 +225,24 @@ func TestIter(t *testing.T) {
 		assert.Equal(t, append([]int{10}, _range(1, 10)...), giter.ToSlice(giter.ReplaceAll(giter.FromSlice(_range(0, 10)), 0, 10)))
 		assert.Equal(t, append([]int{10}, _range(1, 10)...), giter.ToSlice(giter.Replace(giter.FromSlice(_range(0, 10)), 0, 10, 1)))
 		assert.Equal(t, append([]int{10}, _range(1, 10)...), giter.ToSlice(giter.Replace(giter.FromSlice(_range(0, 10)), 0, 10, 5)))
+
+		source := append([]int{10, 10, 10, 1, 1, 1, 10, 10, 10}, _range(0, 10)...)
 		for i := 1; i < 10; i++ {
-			assert.Equal(t, append([]int{10}, _range(1, 10)...)[:i], giter.ToSlice(giter.Limit(giter.Replace(giter.FromSlice(_range(0, 10)), 0, 10, 5), i)))
+			replaceFirst4 := gslice.Clone(source)
+			for j := 0; j < 4; j++ {
+				if replaceFirst4[j] == 10 {
+					replaceFirst4[j] = 1
+				}
+			}
+			assert.Equal(t, replaceFirst4[:i], giter.ToSlice(giter.Limit(giter.Replace(giter.FromSlice(source), 10, 1, 4), i)))
+
+			replaceALl := gslice.Clone(source)
+			for j := 0; j < len(replaceALl); j++ {
+				if replaceALl[j] == 10 {
+					replaceALl[j] = 1
+				}
+			}
+			assert.Equal(t, replaceALl[:i], giter.ToSlice(giter.Limit(giter.ReplaceAll(giter.FromSlice(source), 10, 1), i)))
 		}
 
 		// replace nothing
