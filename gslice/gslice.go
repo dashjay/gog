@@ -11,8 +11,8 @@ import (
 //
 // EXAMPLE:
 //
-//	giter.All([]int{1, 2, 3}, func(x int) bool { return x > 0 }) 👉 true
-//	giter.All([]int{-1, 1, 2, 3}, func(x int) bool { return x > 0 }) 👉 false
+//	gslice.All([]int{1, 2, 3}, func(x int) bool { return x > 0 }) 👉 true
+//	gslice.All([]int{-1, 1, 2, 3}, func(x int) bool { return x > 0 }) 👉 false
 func All[T any](in []T, f func(T) bool) bool {
 	return giter.AllFromSeq(giter.FromSlice(in), f)
 }
