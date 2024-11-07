@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/dashjay/gog/giter"
+	"github.com/dashjay/gog/gslice"
 	"github.com/dashjay/gog/internal/constraints"
 	"github.com/dashjay/gog/optional"
 	"github.com/stretchr/testify/assert"
@@ -29,7 +30,7 @@ func avg[T constraints.Number](in []T) float64 {
 	return float64(sum) / float64(len(in))
 }
 
-func TestSlices(t *testing.T) {
+func TestIter(t *testing.T) {
 	t.Run("test all", func(t *testing.T) {
 		assert.True(t, giter.AllFromSeq(giter.FromSlice([]int{1, 2, 3}), func(x int) bool { return x > 0 }))
 		assert.False(t, giter.AllFromSeq(giter.FromSlice([]int{-1, 1, 2, 3}), func(x int) bool { return x > 0 }))
@@ -184,6 +185,8 @@ func TestSlices(t *testing.T) {
 				assert.Len(t, giter.PullOut(giter.FromSlice(_range(0, 100)), i), 100)
 			}
 		}
+
+		assert.Len(t, giter.PullOut(giter.FromSlice(_range(0, 100)), -1), 100)
 	})
 
 	t.Run("test at", func(t *testing.T) {
@@ -202,5 +205,57 @@ func TestSlices(t *testing.T) {
 		assert.Equal(t, 150, giter.At(cc, 150).Must())
 		cc = giter.Filter(giter.FromSlice(_range(0, 100)), func(v int) bool { return v%5 == 0 })
 		assert.Equal(t, 25, giter.At(cc, 5).Must())
+	})
+
+	t.Run("skip and limit", func(t *testing.T) {
+		// skip
+		assert.Equal(t, _range(10, 30), giter.ToSlice(giter.Skip(giter.FromSlice(_range(0, 30)), 10)))
+		assert.Equal(t, _range(0, 30), giter.ToSlice(giter.Skip(giter.FromSlice(_range(0, 30)), 0)))
+		assert.Equal(t, _range(10, 20), giter.ToSlice(giter.Limit(giter.Skip(giter.FromSlice(_range(0, 30)), 10), 10)))
+
+		// limit
+		assert.Equal(t, _range(0, 10), giter.ToSlice(giter.Limit(giter.FromSlice(_range(0, 30)), 10)))
+		assert.Equal(t, _range(0, 10)[0:1], giter.ToSlice(giter.Limit(giter.Limit(giter.FromSlice(_range(0, 30)), 10), 1)))
+		assert.Equal(t, _range(0, 10), giter.ToSlice(giter.Limit(giter.FromSlice(_range(0, 10)), 10)))
+		assert.Equal(t, _range(0, 0), giter.ToSlice(giter.Limit(giter.FromSlice(_range(0, 0)), 10)))
+		assert.Equal(t, _range(0, 0), giter.ToSlice(giter.Limit(giter.FromSlice(_range(0, 10)), 0)))
+	})
+
+	t.Run("test replace", func(t *testing.T) {
+		assert.Equal(t, append([]int{10}, _range(1, 10)...), giter.ToSlice(giter.ReplaceAll(giter.FromSlice(_range(0, 10)), 0, 10)))
+		assert.Equal(t, append([]int{10}, _range(1, 10)...), giter.ToSlice(giter.Replace(giter.FromSlice(_range(0, 10)), 0, 10, 1)))
+		assert.Equal(t, append([]int{10}, _range(1, 10)...), giter.ToSlice(giter.Replace(giter.FromSlice(_range(0, 10)), 0, 10, 5)))
+
+		source := append([]int{10, 10, 10, 1, 1, 1, 10, 10, 10}, _range(0, 10)...)
+		for i := 1; i < 10; i++ {
+			replaceFirst4 := gslice.Clone(source)
+			for j := 0; j < 4; j++ {
+				if replaceFirst4[j] == 10 {
+					replaceFirst4[j] = 1
+				}
+			}
+			assert.Equal(t, replaceFirst4[:i], giter.ToSlice(giter.Limit(giter.Replace(giter.FromSlice(source), 10, 1, 4), i)))
+
+			replaceALl := gslice.Clone(source)
+			for j := 0; j < len(replaceALl); j++ {
+				if replaceALl[j] == 10 {
+					replaceALl[j] = 1
+				}
+			}
+			assert.Equal(t, replaceALl[:i], giter.ToSlice(giter.Limit(giter.ReplaceAll(giter.FromSlice(source), 10, 1), i)))
+		}
+
+		// replace nothing
+		assert.Equal(t, _range(0, 10), giter.ToSlice(giter.Replace(giter.FromSlice(_range(0, 10)), 0, 100, 0)))
+	})
+
+	t.Run("test reverse", func(t *testing.T) {
+		arr := _range(0, 10)
+		gslice.Reverse(arr)
+		assert.Equal(t, arr, giter.ToSlice(giter.Reverse(giter.FromSlice(_range(0, 10)))))
+		assert.Equal(t, arr[0:1], giter.ToSlice(giter.Limit(giter.Reverse(giter.FromSlice(_range(0, 10))), 1)))
+
+		assert.Equal(t, arr, giter.ToSlice(giter.FromSliceReverse(_range(0, 10))))
+		assert.Equal(t, arr[0:1], giter.ToSlice(giter.Limit(giter.FromSliceReverse(_range(0, 10)), 1)))
 	})
 }

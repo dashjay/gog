@@ -351,14 +351,73 @@ func Concat[T any](seqs ...Seq[T]) Seq[T] {
 func PullOut[T any](seq Seq[T], n int) (out []T) {
 	if n == 0 {
 		return
+	} else if n > 0 {
+		seq(func(t T) bool {
+			if n == 0 {
+				return false
+			}
+			out = append(out, t)
+			n--
+			return true
+		})
+	} else { // n < 0
+		seq(func(t T) bool {
+			out = append(out, t)
+			return true
+		})
 	}
-	seq(func(t T) bool {
-		if n == 0 {
-			return false
-		}
-		out = append(out, t)
-		n--
-		return true
-	})
 	return out
+}
+
+// Skip return a seq that skip n elements from seq.
+func Skip[T any](seq Seq[T], n int) Seq[T] {
+	return func(yield func(T) bool) {
+		seq(func(v T) bool {
+			if n == 0 {
+				return yield(v)
+			} else {
+				n--
+			}
+			return true
+		})
+	}
+}
+
+// Limit return a seq that limit n elements from seq.
+func Limit[T any](seq Seq[T], n int) Seq[T] {
+	return func(yield func(T) bool) {
+		seq(func(t T) bool {
+			if n == 0 {
+				return false
+			}
+			n--
+			return yield(t)
+		})
+	}
+}
+
+// Replace return a seq that replace from -> to
+func Replace[T comparable](seq Seq[T], from, to T, n int) Seq[T] {
+	return func(yield func(T) bool) {
+		seq(func(v T) bool {
+			// n == 0 means we have no more elements need to be replaced
+			if n == 0 {
+				return yield(v)
+			} else if n > 0 { // we have n elements need to be replaced
+				n--
+			} else { // n < 0 means we need to replace all elements
+
+			}
+			if v == from {
+				return yield(to)
+			} else {
+				return yield(v)
+			}
+		})
+	}
+}
+
+// ReplaceAll return a seq that replace all from -> to
+func ReplaceAll[T comparable](seq Seq[T], from, to T) Seq[T] {
+	return Replace(seq, from, to, -1)
 }

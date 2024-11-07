@@ -4,6 +4,7 @@ import (
 	"strconv"
 	"testing"
 
+	"github.com/dashjay/gog/giter"
 	"github.com/dashjay/gog/gslice"
 	"github.com/dashjay/gog/internal/constraints"
 	"github.com/dashjay/gog/optional"
@@ -183,5 +184,54 @@ func TestSlices(t *testing.T) {
 		assert.Equal(t, []int{1, 2, 3, 4, 5}, gslice.Concat([]int{1, 2, 3}, []int{4, 5}))
 		assert.Equal(t, []int{1, 2, 3}, gslice.Concat([]int{1, 2, 3}))
 		assert.Len(t, gslice.Concat([]int{}, []int{}, []int{}), 0)
+	})
+
+	t.Run("subset", func(t *testing.T) {
+		assert.Len(t, gslice.Subset([]int{1, 2, 3}, 0, -1), 0)
+		assert.Len(t, gslice.Subset([]int{1, 2, 3}, 3, 0), 0)
+		assert.Len(t, gslice.Subset([]int{1, 2, 3}, -3, 0), 0)
+		assert.Len(t, gslice.Subset([]int{1, 2, 3}, 0, 0), 0)
+		assert.Equal(t, []int{1}, gslice.Subset([]int{1, 2, 3}, 0, 1))
+		assert.Equal(t, []int{1, 2}, gslice.Subset([]int{1, 2, 3}, 0, 2))
+		assert.Equal(t, []int{1, 2, 3}, gslice.Subset([]int{1, 2, 3}, 0, 3))
+
+		for i := 0; i < 100; i++ {
+			assert.Equal(t, _range(i, i+10), gslice.Subset(_range(0, 200), i, 10))
+			assert.Subset(t, _range(0, 200), gslice.Subset(_range(0, 200), i, 10))
+		}
+
+		assert.Equal(t, []int{3}, gslice.SubsetInPlace([]int{1, 2, 3}, -1, 1))
+		assert.Equal(t, []int{3}, gslice.SubsetInPlace([]int{1, 2, 3}, -1, 2))
+		assert.Equal(t, []int{3}, gslice.SubsetInPlace([]int{1, 2, 3}, -1, 3))
+		assert.Len(t, gslice.SubsetInPlace([]int{1, 2, 3}, -999, 3), 0)
+		assert.Len(t, gslice.SubsetInPlace([]int{1, 2, 3}, 999, 3), 0)
+
+		for i := 1; i < 100; i++ {
+			assert.Equal(t, _range(200-i, gslice.MinN(200-i+10, 200).Must()), gslice.Subset(_range(0, 200), -i, 10))
+		}
+
+		original := []int{1, 2, 3}
+		clonedSubset := gslice.Subset(original, 0, 2)
+		clonedSubset[0] = 100
+		assert.Equal(t, []int{1, 2, 3}, original)
+		assert.Equal(t, []int{100, 2}, clonedSubset)
+	})
+
+	t.Run("test replace", func(t *testing.T) {
+		assert.Equal(t, append([]int{10}, _range(1, 10)...), gslice.ReplaceAll(_range(0, 10), 0, 10))
+		assert.Equal(t, append([]int{10}, _range(1, 10)...), gslice.Replace(_range(0, 10), 0, 10, 1))
+		assert.Equal(t, append([]int{10}, _range(1, 10)...), gslice.Replace(_range(0, 10), 0, 10, 5))
+
+		// replace nothing
+		assert.Equal(t, _range(0, 10), giter.ToSlice(giter.Replace(giter.FromSlice(_range(0, 10)), 0, 100, 0)))
+	})
+
+	t.Run("reverse", func(t *testing.T) {
+		assert.Equal(t, []int{3, 2, 1}, gslice.ReverseClone([]int{1, 2, 3}))
+		assert.Equal(t, []int{5, 4, 3, 2, 1}, gslice.ReverseClone([]int{1, 2, 3, 4, 5}))
+
+		arr := []int{1, 2, 3}
+		gslice.Reverse(arr)
+		assert.Equal(t, []int{3, 2, 1}, arr)
 	})
 }

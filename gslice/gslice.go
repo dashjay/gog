@@ -11,8 +11,8 @@ import (
 //
 // EXAMPLE:
 //
-//	giter.All([]int{1, 2, 3}, func(x int) bool { return x > 0 }) 👉 true
-//	giter.All([]int{-1, 1, 2, 3}, func(x int) bool { return x > 0 }) 👉 false
+//	gslice.All([]int{1, 2, 3}, func(x int) bool { return x > 0 }) 👉 true
+//	gslice.All([]int{-1, 1, 2, 3}, func(x int) bool { return x > 0 }) 👉 false
 func All[T any](in []T, f func(T) bool) bool {
 	return giter.AllFromSeq(giter.FromSlice(in), f)
 }
@@ -308,4 +308,95 @@ func Concat[T any](vs ...[]T) []T {
 		seqs = append(seqs, giter.FromSlice(v))
 	}
 	return giter.ToSlice(giter.Concat(seqs...))
+}
+
+// Subset returns a subset slice from the slice.
+// if start < -1 means that we take subset from right-to-left
+//
+// EXAMPLE:
+//
+//	gslice.Subset([]int{1, 2, 3}, 0, 2) 👉 [1, 2]
+//	gslice.Subset([]int{1, 2, 3}, -1, 2) 👉 [2, 3]
+func Subset[T any, Slice ~[]T](in Slice, start, count int) Slice {
+	if count < 0 {
+		count = 0
+	}
+	if start >= len(in) || -start > len(in) {
+		return nil
+	}
+	if start >= 0 {
+		return giter.ToSlice(giter.Limit(giter.Skip(giter.FromSlice(in), start), count))
+	} else {
+		return giter.ToSlice(giter.Limit(giter.Skip(giter.FromSlice(in), len(in)+start), count))
+	}
+}
+
+// SubsetInPlace returns a subset slice copied from the slice.
+// if start < -1 means that we take subset from right-to-left
+// EXAMPLE:
+//
+//	gslice.SubsetInPlace([]int{1, 2, 3}, 0, 2) 👉 [1, 2]
+//	gslice.SubsetInPlace([]int{1, 2, 3}, -1, 2) 👉 [2, 3]
+func SubsetInPlace[T any, Slice ~[]T](in Slice, start int, count uint) Slice {
+	size := len(in)
+
+	if start < 0 {
+		start = size + start
+		if start < 0 {
+			return Slice{}
+		}
+	}
+	if start > size {
+		return Slice{}
+	}
+
+	if count > uint(size)-uint(start) {
+		count = uint(size - start)
+	}
+	return in[start : start+int(count)]
+}
+
+// Replace replaces the count elements in the slice from 'from' to 'to'.
+//
+// EXAMPLE:
+//
+//	gslice.Replace([]int{1, 2, 3}, 2, 4, 1) 👉 [1, 4, 3]
+//	gslice.Replace([]int{1, 2, 2}, 2, 4, -1) 👉 [1, 4, 4]
+func Replace[T comparable, Slice ~[]T](in Slice, from, to T, count int) []T {
+	return giter.ToSlice(giter.Replace(giter.FromSlice(in), from, to, count))
+}
+
+// ReplaceAll replaces all elements in the slice from 'from' to 'to'.
+//
+// EXAMPLE:
+//
+//	gslice.ReplaceAll([]int{1, 2, 3}, 2, 4) 👉 [1, 4, 3]
+//	gslice.ReplaceAll([]int{1, 2, 2}, 2, 4) 👉 [1, 4, 4]
+func ReplaceAll[T comparable, Slice ~[]T](in Slice, from, to T) []T {
+	return Replace(in, from, to, -1)
+}
+
+// ReverseClone reverses the slice.
+//
+// EXAMPLE:
+//
+//	gslice.ReverseClone([]int{1, 2, 3}) 👉 [3, 2, 1]
+//	gslice.ReverseClone([]int{}) 👉 []int{}
+//	gslice.ReverseClone([]int{3, 2, 1}) 👉 [1, 2, 3]
+func ReverseClone[T any, Slice ~[]T](in Slice) Slice {
+	// why we do not use slices.Reverse() directly ?
+	// because lower version golang may has not package "slices"
+	return giter.ToSlice(giter.FromSliceReverse(in))
+}
+
+// Reverse reverses the slice.
+//
+// EXAMPLE:
+//
+//	gslice.Reverse([]int{1, 2, 3}) 👉 [3, 2, 1]
+//	gslice.Reverse([]int{}) 👉 []int{}
+func Reverse[T any, Slice ~[]T](in Slice) {
+	for i, j := 0, len(in)-1; i < j; i, j = i+1, j-1 {
+		in[i], in[j] = in[j], in[i]
+	}
 }
