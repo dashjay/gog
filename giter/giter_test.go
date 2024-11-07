@@ -262,4 +262,9 @@ func TestIter(t *testing.T) {
 	t.Run("test repeat", func(t *testing.T) {
 		assert.Equal(t, []int{1, 2, 3, 1, 2, 3, 1, 2, 3}, giter.ToSlice(giter.Repeat(giter.FromSlice([]int{1, 2, 3}), 3)))
 	})
+
+	t.Run("test shuffle", func(t *testing.T) {
+		assert.Len(t, giter.ToSlice(giter.Limit(giter.FromSliceShuffle(_range(0, 10)), 5)), 5)
+		assert.Len(t, giter.ToSlice(giter.FromSliceShuffle(_range(0, 10))), 10)
+	})
 }

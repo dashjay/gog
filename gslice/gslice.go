@@ -1,6 +1,8 @@
 package gslice
 
 import (
+	"math/rand"
+
 	"github.com/dashjay/gog/giter"
 	"github.com/dashjay/gog/internal/constraints"
 	"github.com/dashjay/gog/optional"
@@ -423,4 +425,28 @@ func RepeatBy[T any](n int, f func(i int) T) []T {
 		out = append(out, f(i))
 	}
 	return out
+}
+
+// Shuffle shuffles the slice.
+//
+// EXAMPLE:
+//
+//	gslice.Shuffle([]int{1, 2, 3}) 👉 [2, 1, 3] (random)
+//	gslice.Shuffle([]int{}) 👉 []int{}
+func Shuffle[T any, Slice ~[]T](in Slice) Slice {
+	return giter.ToSlice(giter.FromSliceShuffle(in))
+}
+
+// ShuffleInPlace shuffles the slice.
+//
+// EXAMPLE:
+//
+//	array := []int{1, 2, 3}
+//	gslice.ShuffleInPlace(array) 👉 [2, 1, 3] (random)
+func ShuffleInPlace[T any, Slice ~[]T](in Slice) {
+	// why we do not use slices.Shuffle() directly?
+	// because lower version golang may has not package "slices"
+	rand.Shuffle(len(in), func(i, j int) {
+		in[i], in[j] = in[j], in[i]
+	})
 }
