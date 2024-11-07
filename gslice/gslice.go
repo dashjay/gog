@@ -331,28 +331,70 @@ func Subset[T any, Slice ~[]T](in Slice, start, count int) Slice {
 	}
 }
 
-// SubsetClone returns a subset slice copied from the slice.
-func SubsetClone[T any, Slice ~[]T](in Slice, start, count int) Slice {
-	return Clone(Subset(in, start, count))
+// SubsetInplace returns a subset slice copied from the slice.
+// if start < -1 means that we take subset from right-to-left
+// EXAMPLE:
+//
+//	gslice.SubsetInplace([]int{1, 2, 3}, 0, 2) 👉 [1, 2]
+//	gslice.SubsetInplace([]int{1, 2, 3}, -1, 2) 👉 [2, 3]
+func SubsetInplace[T any, Slice ~[]T](in Slice, start int, count uint) Slice {
+	size := len(in)
+
+	if start < 0 {
+		start = size + start
+		if start < 0 {
+			start = 0
+		}
+	}
+	if start > size {
+		return Slice{}
+	}
+
+	if count > uint(size)-uint(start) {
+		count = uint(size - start)
+	}
+	return in[start : start+int(count)]
 }
 
 // Replace replaces the count elements in the slice from 'from' to 'to'.
+//
+// EXAMPLE:
+//
+//	gslice.Replace([]int{1, 2, 3}, 2, 4, 1) 👉 [1, 4, 3]
+//	gslice.Replace([]int{1, 2, 2}, 2, 4, -1) 👉 [1, 4, 4]
 func Replace[T comparable, Slice ~[]T](in Slice, from, to T, count int) []T {
 	return giter.ToSlice(giter.Replace(giter.FromSlice(in), from, to, count))
 }
 
 // ReplaceAll replaces all elements in the slice from 'from' to 'to'.
+//
+// EXAMPLE:
+//
+//	gslice.ReplaceAll([]int{1, 2, 3}, 2, 4) 👉 [1, 4, 3]
+//	gslice.ReplaceAll([]int{1, 2, 2}, 2, 4) 👉 [1, 4, 4]
 func ReplaceAll[T comparable, Slice ~[]T](in Slice, from, to T) []T {
 	return Replace(in, from, to, -1)
 }
 
 // ReverseClone reverses the slice.
+//
+// EXAMPLE:
+//
+//	gslice.ReverseClone([]int{1, 2, 3}) 👉 [3, 2, 1]
+//	gslice.ReverseClone([]int{}) 👉 []int{}
+//	gslice.ReverseClone([]int{3, 2, 1}) 👉 [1, 2, 3]
 func ReverseClone[T any, Slice ~[]T](in Slice) Slice {
 	// why we do not use slices.Reverse() directly ?
 	// because lower version golang may has not package "slices"
 	return giter.ToSlice(giter.FromSliceReverse(in))
 }
 
+// Reverse reverses the slice.
+//
+// EXAMPLE:
+//
+//	gslice.Reverse([]int{1, 2, 3}) 👉 [3, 2, 1]
+//	gslice.Reverse([]int{}) 👉 []int{}
 func Reverse[T any, Slice ~[]T](in Slice) {
 	for i, j := 0, len(in)-1; i < j; i, j = i+1, j-1 {
 		in[i], in[j] = in[j], in[i]
