@@ -264,6 +264,9 @@ func TestSlices(t *testing.T) {
 
 		assert.Equal(t, [][]int{{1, 2, 3}, {4, 5, 6}, {7, 8, 9}, {10}}, gslice.Chunk([]int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, 3))
 		assert.Equal(t, [][]int{{1, 2, 3}, {4, 5, 6}, {7, 8, 9}, {10}}, gslice.ChunkInPlace([]int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, 3))
+
+		assert.Nil(t, gslice.ChunkInPlace([]int{}, 0))
+		assert.Nil(t, gslice.Chunk([]int{}, 0))
 	})
 }
 
