@@ -247,4 +247,11 @@ func TestSlices(t *testing.T) {
 			return strconv.Itoa(idx)
 		}))
 	})
+
+	t.Run("test shuffle", func(t *testing.T) {
+		assert.Len(t, gslice.Shuffle([]int{1, 2, 3}), 3)
+		arr := _range(1, 100)
+		gslice.ShuffleInPlace(arr)
+		assert.Len(t, arr, 99)
+	})
 }
