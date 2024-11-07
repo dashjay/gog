@@ -258,4 +258,8 @@ func TestIter(t *testing.T) {
 		assert.Equal(t, arr, giter.ToSlice(giter.FromSliceReverse(_range(0, 10))))
 		assert.Equal(t, arr[0:1], giter.ToSlice(giter.Limit(giter.FromSliceReverse(_range(0, 10)), 1)))
 	})
+
+	t.Run("test repeat", func(t *testing.T) {
+		assert.Equal(t, []int{1, 2, 3, 1, 2, 3, 1, 2, 3}, giter.ToSlice(giter.Repeat(giter.FromSlice([]int{1, 2, 3}), 3)))
+	})
 }

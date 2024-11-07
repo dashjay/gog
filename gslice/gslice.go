@@ -400,3 +400,27 @@ func Reverse[T any, Slice ~[]T](in Slice) {
 		in[i], in[j] = in[j], in[i]
 	}
 }
+
+// Repeat returns a new slice with the elements repeated 'count' times.
+//
+// EXAMPLE:
+//
+//	gslice.Repeat([]int{1, 2, 3}, 3) 👉 [1, 2, 3, 1, 2, 3, 1, 2, 3]
+//	gslice.Repeat([]int{1, 2, 3}, 0) 👉 []int{}
+func Repeat[T any, Slice ~[]T](in Slice, count int) Slice {
+	return giter.ToSlice(giter.Repeat(giter.FromSlice(in), count))
+}
+
+// RepeatBy returns a new slice with the elements return by f repeated 'count' times.
+//
+// EXAMPLE:
+//
+//	gslice.RepeatBy(3, func(i int) int { return i }) 👉 [0, 1, 2]
+//	gslice.RepeatBy(3, func(i int) string { return strconv.Itoa(i) }) 👉 []string{"1", "2", "3"}
+func RepeatBy[T any](n int, f func(i int) T) []T {
+	out := make([]T, 0, n)
+	for i := 0; i < n; i++ {
+		out = append(out, f(i))
+	}
+	return out
+}

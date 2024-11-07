@@ -48,7 +48,8 @@ generics library for golang
 - [gslice.ReplaceAll](https://pkg.go.dev/github.com/dashjay/gog/gslice#ReplaceAll)
 - [gslice.ReverseClone](https://pkg.go.dev/github.com/dashjay/gog/gslice#ReverseClone)
 - [gslice.Reverse](https://pkg.go.dev/github.com/dashjay/gog/gslice#Reverse)
-
+- [gslice.Repeat](https://pkg.go.dev/github.com/dashjay/gog/gslice#Repeat)
+- [gslice.RepeatBy](https://pkg.go.dev/github.com/dashjay/gog/gslice#RepeatBy)
 
 ## Changelog
 
