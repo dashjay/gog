@@ -2,6 +2,8 @@
 
 Package gog provides some generic libraries.
 
+⚠️WARNING: this repo is still under development, we found that the stdlib iter.Seq has not good performance in some simple cases.
+
 - **gstd** provides some wrappers for standard library like sync.Map, sync.Pool, etc.
 - **gmutex** provides some generics utils with mutex.
 - **gstl** provides all kinds of containers stl.
