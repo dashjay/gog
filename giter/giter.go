@@ -5,6 +5,7 @@ package giter
 
 import (
 	"iter"
+	"math/rand/v2"
 	"strings"
 
 	"github.com/dashjay/gog/internal/constraints"
@@ -393,4 +394,16 @@ func Replace[T comparable](seq Seq[T], from, to T, n int) Seq[T] {
 // ReplaceAll return a seq that replace all from -> to
 func ReplaceAll[T comparable](seq Seq[T], from, to T) Seq[T] {
 	return Replace(seq, from, to, -1)
+}
+
+// FromSliceShuffle return a seq that shuffle the elements in the input slice.
+func FromSliceShuffle[T any](in []T) Seq[T] {
+	randPerm := rand.Perm(len(in))
+	return func(yield func(T) bool) {
+		for i := 0; i < len(randPerm); i++ {
+			if !yield(in[randPerm[i]]) {
+				break
+			}
+		}
+	}
 }
