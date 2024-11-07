@@ -254,4 +254,29 @@ func TestSlices(t *testing.T) {
 		gslice.ShuffleInPlace(arr)
 		assert.Len(t, arr, 99)
 	})
+
+	t.Run("chunk and chunk inplace", func(t *testing.T) {
+		assert.Equal(t, [][]int{{1, 2, 3}, {4, 5, 6}}, gslice.Chunk([]int{1, 2, 3, 4, 5, 6}, 3))
+		assert.Equal(t, [][]int{{1, 2, 3}, {4, 5, 6}}, gslice.ChunkInPlace([]int{1, 2, 3, 4, 5, 6}, 3))
+
+		assert.Equal(t, [][]int{{1, 2, 3}, {4, 5, 6}, {7, 8, 9}}, gslice.Chunk([]int{1, 2, 3, 4, 5, 6, 7, 8, 9}, 3))
+		assert.Equal(t, [][]int{{1, 2, 3}, {4, 5, 6}, {7, 8, 9}}, gslice.ChunkInPlace([]int{1, 2, 3, 4, 5, 6, 7, 8, 9}, 3))
+
+		assert.Equal(t, [][]int{{1, 2, 3}, {4, 5, 6}, {7, 8, 9}, {10}}, gslice.Chunk([]int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, 3))
+		assert.Equal(t, [][]int{{1, 2, 3}, {4, 5, 6}, {7, 8, 9}, {10}}, gslice.ChunkInPlace([]int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, 3))
+	})
+}
+
+func BenchmarkChunkAndChunkInPlace(b *testing.B) {
+	b.Run("chunk", func(b *testing.B) {
+		arr := _range(0, b.N)
+		b.ResetTimer()
+		gslice.Chunk(arr, b.N/100)
+	})
+
+	b.Run("chunk in place", func(b *testing.B) {
+		arr := _range(0, b.N)
+		b.ResetTimer()
+		gslice.ChunkInPlace(arr, b.N/100)
+	})
 }

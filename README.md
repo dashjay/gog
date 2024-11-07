@@ -52,7 +52,8 @@ generics library for golang
 - [gslice.RepeatBy](https://pkg.go.dev/github.com/dashjay/gog/gslice#RepeatBy)
 - [gslice.Shuffle](https://pkg.go.dev/github.com/dashjay/gog/gslice#Shuffle)
 - [gslice.ShuffleInPlace](https://pkg.go.dev/github.com/dashjay/gog/gslice#ShuffleInPlace)
-
+- [gslice.Chunk](https://pkg.go.dev/github.com/dashjay/gog/gslice#Chunk)
+- [gslice.ChunkInPlace](https://pkg.go.dev/github.com/dashjay/gog/gslice#ChunkInPlace)
 ## Changelog
 
 v0.1.4:
