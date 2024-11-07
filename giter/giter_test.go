@@ -264,6 +264,7 @@ func TestIter(t *testing.T) {
 	})
 
 	t.Run("test shuffle", func(t *testing.T) {
+		assert.Len(t, giter.ToSlice(giter.Limit(giter.FromSliceShuffle(_range(0, 10)), 5)), 5)
 		assert.Len(t, giter.ToSlice(giter.FromSliceShuffle(_range(0, 10))), 10)
 	})
 }
