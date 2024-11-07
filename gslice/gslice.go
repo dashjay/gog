@@ -450,3 +450,48 @@ func ShuffleInPlace[T any, Slice ~[]T](in Slice) {
 		in[i], in[j] = in[j], in[i]
 	})
 }
+
+// Chunk returns a new slice with the elements in the slice chunked into smaller slices of the specified size.
+//
+// EXAMPLE:
+//
+//	gslice.Chunk([]int{1, 2, 3, 4, 5}, 2) 👉 [[1, 2], [3, 4], [5]]
+//	gslice.Chunk([]int{1, 2, 3, 4, 5}, 10) 👉 [[1, 2, 3, 4, 5]]
+//	gslice.Chunk([]int{1, 2, 3, 4, 5}, 0) 👉 []int{}
+func Chunk[T any, Slice ~[]T](in Slice, chunkSize int) []Slice {
+	if chunkSize <= 0 {
+		return nil
+	}
+	out := make([]Slice, 0, len(in)/chunkSize+1)
+	seq := giter.FromSlice(in)
+	for {
+		res := giter.ToSlice(giter.Limit(giter.Skip(seq, len(out)*chunkSize), chunkSize))
+		if len(res) == 0 {
+			break
+		}
+		out = append(out, res)
+	}
+	return out
+}
+
+// ChunkInPlace returns a new slice with the elements in the slice chunked into smaller slices of the specified size.
+// This function will not copy the elements, has no extra costs.
+// EXAMPLE:
+//
+//	gslice.Chunk([]int{1, 2, 3, 4, 5}, 2) 👉 [[1, 2], [3, 4], [5]]
+//	gslice.Chunk([]int{1, 2, 3, 4, 5}, 10) 👉 [[1, 2, 3, 4, 5]]
+//	gslice.Chunk([]int{1, 2, 3, 4, 5}, 0) 👉 []int{}
+func ChunkInPlace[T any, Slice ~[]T](in Slice, chunkSize int) []Slice {
+	if chunkSize <= 0 {
+		return nil
+	}
+	out := make([]Slice, 0, len(in)/chunkSize+1)
+	for i := 0; i < len(in); i += chunkSize {
+		end := i + chunkSize
+		if end > len(in) {
+			end = len(in)
+		}
+		out = append(out, in[i:end])
+	}
+	return out
+}

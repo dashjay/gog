@@ -2,6 +2,8 @@
 
 Package gog provides some generic libraries.
 
+⚠️WARNING: this repo is still under development, we found that the stdlib iter.Seq has not good performance in some simple cases.
+
 - **gstd** provides some wrappers for standard library like sync.Map, sync.Pool, etc.
 - **gmutex** provides some generics utils with mutex.
 - **gstl** provides all kinds of containers stl.
@@ -52,7 +54,8 @@ generics library for golang
 - [gslice.RepeatBy](https://pkg.go.dev/github.com/dashjay/gog/gslice#RepeatBy)
 - [gslice.Shuffle](https://pkg.go.dev/github.com/dashjay/gog/gslice#Shuffle)
 - [gslice.ShuffleInPlace](https://pkg.go.dev/github.com/dashjay/gog/gslice#ShuffleInPlace)
-
+- [gslice.Chunk](https://pkg.go.dev/github.com/dashjay/gog/gslice#Chunk)
+- [gslice.ChunkInPlace](https://pkg.go.dev/github.com/dashjay/gog/gslice#ChunkInPlace)
 ## Changelog
 
 v0.1.4:
