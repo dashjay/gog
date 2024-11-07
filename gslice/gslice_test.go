@@ -235,8 +235,16 @@ func TestSlices(t *testing.T) {
 		assert.Equal(t, []int{3, 2, 1}, arr)
 	})
 
-	t.Run("test repeat", func(t *testing.T) {
+	t.Run("test repeat and repeat_by", func(t *testing.T) {
 		assert.Equal(t, []int{1, 1, 1}, gslice.Repeat([]int{1}, 3))
 		assert.Equal(t, []int{1, 2, 3, 1, 2, 3, 1, 2, 3}, gslice.Repeat([]int{1, 2, 3}, 3))
+
+		assert.Equal(t, []int{1, 2, 3}, gslice.RepeatBy(3, func(idx int) int {
+			return idx + 1
+		}))
+
+		assert.Equal(t, []string{"0", "1", "2"}, gslice.RepeatBy(3, func(idx int) string {
+			return strconv.Itoa(idx)
+		}))
 	})
 }
