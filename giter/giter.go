@@ -308,3 +308,19 @@ func Concat[T any](seqs ...Seq[T]) Seq[T] {
 		}
 	}
 }
+
+// PullOut pull out n elements from seq.
+func PullOut[T any](seq Seq[T], n int) (out []T) {
+	if n == 0 {
+		return
+	}
+	out = make([]T, 0, n)
+	for v := range seq {
+		if n == 0 {
+			break
+		}
+		out = append(out, v)
+		n--
+	}
+	return out
+}

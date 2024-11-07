@@ -175,4 +175,32 @@ func TestSlices(t *testing.T) {
 				giter.Filter(giter.FromSlice(_range(5, 10)), func(v int) bool { return v != 5 }),
 			)))
 	})
+
+	t.Run("test pullout", func(t *testing.T) {
+		for i := 0; i < 1000; i++ {
+			if i < 100 {
+				assert.Len(t, giter.PullOut(giter.FromSlice(_range(0, 100)), i), i)
+			} else {
+				assert.Len(t, giter.PullOut(giter.FromSlice(_range(0, 100)), i), 100)
+			}
+		}
+	})
+
+	t.Run("test at", func(t *testing.T) {
+		for i := 0; i < 1000; i++ {
+			if i < 100 {
+				assert.Equal(t, i, giter.At(giter.FromSlice(_range(0, 100)), i).Must())
+			} else {
+				assert.False(t, giter.At(giter.FromSlice(_range(0, 100)), i).Ok())
+			}
+		}
+
+		cc := giter.Concat(
+			giter.FromSlice(_range(0, 100)),
+			giter.FromSlice(_range(100, 200)),
+		)
+		assert.Equal(t, 150, giter.At(cc, 150).Must())
+		cc = giter.Filter(giter.FromSlice(_range(0, 100)), func(v int) bool { return v%5 == 0 })
+		assert.Equal(t, 25, giter.At(cc, 5).Must())
+	})
 }

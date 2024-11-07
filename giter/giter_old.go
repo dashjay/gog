@@ -329,10 +329,9 @@ func Filter[T any](seq Seq[T], f func(T) bool) Seq[T] {
 	return func(yield func(T) bool) {
 		seq(func(v T) bool {
 			if f(v) {
-				if !yield(v) {
-					break
-				}
+				return yield(v)
 			}
+			return true
 		})
 	}
 }
@@ -346,4 +345,19 @@ func Concat[T any](seqs ...Seq[T]) Seq[T] {
 			})
 		}
 	}
+}
+
+// PullOut pull out n elements from seq.
+func PullOut[T any](seq Seq[T], n int) (out []T) {
+	if n == 0 {
+		return
+	}
+	seq(func(t T) bool {
+		if n == 0 {
+			return false
+		}
+		out = append(out, v)
+		n--
+	})
+	return out
 }
