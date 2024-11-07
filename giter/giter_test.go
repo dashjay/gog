@@ -1,11 +1,11 @@
 package giter_test
 
 import (
-	"slices"
 	"strconv"
 	"testing"
 
 	"github.com/dashjay/gog/giter"
+	"github.com/dashjay/gog/gslice"
 	"github.com/dashjay/gog/internal/constraints"
 	"github.com/dashjay/gog/optional"
 	"github.com/stretchr/testify/assert"
@@ -230,7 +230,7 @@ func TestIter(t *testing.T) {
 
 	t.Run("test reverse", func(t *testing.T) {
 		arr := _range(0, 10)
-		slices.Reverse(arr)
+		gslice.Reverse(arr)
 		assert.Equal(t, arr, giter.ToSlice(giter.Reverse(giter.FromSlice(_range(0, 10)))))
 		assert.Equal(t, arr[0:1], giter.ToSlice(giter.Limit(giter.Reverse(giter.FromSlice(_range(0, 10))), 1)))
 
