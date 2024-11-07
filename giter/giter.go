@@ -274,7 +274,7 @@ func MinBy[T constraints.Ordered](seq Seq[T], less func(T, T) bool) (r optional.
 	return optional.FromValue(_min)
 }
 
-// ToSlice return the elements in seq as a slice.
+// ToSlice returns the elements in seq as a slice.
 func ToSlice[T any](seq Seq[T]) (out []T) {
 	for v := range seq {
 		out = append(out, v)
@@ -282,7 +282,7 @@ func ToSlice[T any](seq Seq[T]) (out []T) {
 	return out
 }
 
-// Filter return a new seq filtered origin seq with f
+// Filter returns a new seq filtered origin seq with f
 func Filter[T any](seq Seq[T], f func(T) bool) Seq[T] {
 	return func(yield func(T) bool) {
 		for v := range seq {
@@ -313,14 +313,84 @@ func Concat[T any](seqs ...Seq[T]) Seq[T] {
 func PullOut[T any](seq Seq[T], n int) (out []T) {
 	if n == 0 {
 		return
-	}
-	out = make([]T, 0, n)
-	for v := range seq {
-		if n == 0 {
-			break
+	} else if n > 0 {
+		out = make([]T, 0, n)
+		for v := range seq {
+			if n == 0 {
+				break
+			}
+			out = append(out, v)
+			n--
 		}
-		out = append(out, v)
-		n--
+		return out
+	} else { // n < 0 means no limit
+		out = make([]T, 0)
+		for v := range seq {
+			out = append(out, v)
+		}
+		return out
 	}
-	return out
+}
+
+// Skip return a seq that skip n elements from seq.
+func Skip[T any](seq Seq[T], n int) Seq[T] {
+	return func(yield func(T) bool) {
+		for v := range seq {
+			if n == 0 {
+				if !yield(v) {
+					break
+				}
+			} else {
+				n--
+			}
+		}
+	}
+}
+
+// Limit return a seq that limit n elements from seq.
+func Limit[T any](seq Seq[T], n int) Seq[T] {
+	return func(yield func(T) bool) {
+		for v := range seq {
+			if n == 0 {
+				break
+			}
+			if !yield(v) {
+				break
+			}
+			n--
+		}
+	}
+}
+
+// Replace return a seq that replace from -> to
+func Replace[T comparable](seq Seq[T], from, to T, n int) Seq[T] {
+	return func(yield func(T) bool) {
+		for v := range seq {
+			// n == 0 means we have no more elements need to be replaced
+			if n == 0 {
+				if !yield(v) {
+					break
+				}
+				continue
+			} else if n > 0 { // we have n elements need to be replaced
+				n--
+			} else { // n < 0 means we need to replace all elements
+
+			}
+			if v == from {
+				if !yield(to) {
+					break
+				}
+			} else {
+				if !yield(v) {
+					break
+				}
+			}
+		}
+	}
+}
+
+// ReplaceAll return a seq that replace all from -> to
+func ReplaceAll[T comparable](seq Seq[T], from, to T) Seq[T] {
+	return Replace(seq, from, to, -1)
 }

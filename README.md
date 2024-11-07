@@ -5,6 +5,7 @@ Package gog provides some generic libraries.
 - **gstd** provides some wrappers for standard library like sync.Map, sync.Pool, etc.
 - **gmutex** provides some generics utils with mutex.
 - **gstl** provides all kinds of containers stl.
+- **gslice** provides some utils for slices.
 
 [![codecov](https://codecov.io/gh/dashjay/gog/graph/badge.svg?token=QWD9F9EO1L)](https://codecov.io/gh/dashjay/gog)
 

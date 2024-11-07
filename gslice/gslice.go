@@ -309,3 +309,52 @@ func Concat[T any](vs ...[]T) []T {
 	}
 	return giter.ToSlice(giter.Concat(seqs...))
 }
+
+// Subset returns a subset slice from the slice.
+// if start < -1 means that we take subset from right-to-left
+//
+// EXAMPLE:
+//
+//	gslice.Subset([]int{1, 2, 3}, 0, 2) 👉 [1, 2]
+//	gslice.Subset([]int{1, 2, 3}, -1, 2) 👉 [2, 3]
+func Subset[T any, Slice ~[]T](in Slice, start, count int) Slice {
+	if count < 0 {
+		count = 0
+	}
+	if start >= len(in) || -start > len(in) {
+		return nil
+	}
+	if start >= 0 {
+		return giter.ToSlice(giter.Limit(giter.Skip(giter.FromSlice(in), start), count))
+	} else {
+		return giter.ToSlice(giter.Limit(giter.Skip(giter.FromSlice(in), len(in)+start), count))
+	}
+}
+
+// SubsetClone returns a subset slice copied from the slice.
+func SubsetClone[T any, Slice ~[]T](in Slice, start, count int) Slice {
+	return Clone(Subset(in, start, count))
+}
+
+// Replace replaces the count elements in the slice from 'from' to 'to'.
+func Replace[T comparable, Slice ~[]T](in Slice, from, to T, count int) []T {
+	return giter.ToSlice(giter.Replace(giter.FromSlice(in), from, to, count))
+}
+
+// ReplaceAll replaces all elements in the slice from 'from' to 'to'.
+func ReplaceAll[T comparable, Slice ~[]T](in Slice, from, to T) []T {
+	return Replace(in, from, to, -1)
+}
+
+// ReverseClone reverses the slice.
+func ReverseClone[T any, Slice ~[]T](in Slice) Slice {
+	// why we do not use slices.Reverse() directly ?
+	// because lower version golang may has not package "slices"
+	return giter.ToSlice(giter.FromSliceReverse(in))
+}
+
+func Reverse[T any, Slice ~[]T](in Slice) {
+	for i, j := 0, len(in)-1; i < j; i, j = i+1, j-1 {
+		in[i], in[j] = in[j], in[i]
+	}
+}
