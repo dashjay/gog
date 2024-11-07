@@ -1,4 +1,4 @@
-package gstd
+package gsync
 
 import "sync"
 

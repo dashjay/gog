@@ -11,7 +11,42 @@ Package gog provides some generic libraries.
 generics library for golang
 
 
+## Interfaces
+
+### Slices
+- [gslice.All](https://pkg.go.dev/github.com/dashjay/gog/gslice#All)
+- [gslice.Any](https://pkg.go.dev/github.com/dashjay/gog/gslice#Any)
+- [gslice.Avg](https://pkg.go.dev/github.com/dashjay/gog/gslice#Avg)
+- [gslice.AvgN](https://pkg.go.dev/github.com/dashjay/gog/gslice#AvgN)
+- [gslice.AvgBy](https://pkg.go.dev/github.com/dashjay/gog/gslice#AvgBy)
+- [gslice.Contains](https://pkg.go.dev/github.com/dashjay/gog/gslice#Contains)
+- [gslice.ContainsBy](https://pkg.go.dev/github.com/dashjay/gog/gslice#ContainsBy)
+- [gslice.ContainsAny](https://pkg.go.dev/github.com/dashjay/gog/gslice#ContainsAny)
+- [gslice.ContainsAll](https://pkg.go.dev/github.com/dashjay/gog/gslice#ContainsAll)
+- [gslice.Count](https://pkg.go.dev/github.com/dashjay/gog/gslice#Count)
+- [gslice.Find](https://pkg.go.dev/github.com/dashjay/gog/gslice#Find)
+- [gslice.FindO](https://pkg.go.dev/github.com/dashjay/gog/gslice#FindO)
+- [gslice.ForEach](https://pkg.go.dev/github.com/dashjay/gog/gslice#ForEach)
+- [gslice.ForEachIdx](https://pkg.go.dev/github.com/dashjay/gog/gslice#ForEachIdx)
+- [gslice.HeadO](https://pkg.go.dev/github.com/dashjay/gog/gslice#HeadO)
+- [gslice.Head](https://pkg.go.dev/github.com/dashjay/gog/gslice#Head)
+- [gslice.Join](https://pkg.go.dev/github.com/dashjay/gog/gslice#Join)
+- [gslice.Min](https://pkg.go.dev/github.com/dashjay/gog/gslice#Min)
+- [gslice.MinN](https://pkg.go.dev/github.com/dashjay/gog/gslice#MinN)
+- [gslice.MinBy](https://pkg.go.dev/github.com/dashjay/gog/gslice#MinBy)
+- [gslice.Max](https://pkg.go.dev/github.com/dashjay/gog/gslice#Max)
+- [gslice.MaxN](https://pkg.go.dev/github.com/dashjay/gog/gslice#MaxN)
+- [gslice.MaxBy](https://pkg.go.dev/github.com/dashjay/gog/gslice#MaxBy)
+- [gslice.Map](https://pkg.go.dev/github.com/dashjay/gog/gslice#Map)
+- [gslice.Clone](https://pkg.go.dev/github.com/dashjay/gog/gslice#Clone)
+- [gslice.CloneBy](https://pkg.go.dev/github.com/dashjay/gog/gslice#CloneBy)
+- [gslice.Concat](https://pkg.go.dev/github.com/dashjay/gog/gslice#Concat)
+
 ## Changelog
+
+v0.1.3:
+- Implement slice tools ()
+  - gslice.*
 
 v0.1.2:
 - Implement stl containers
